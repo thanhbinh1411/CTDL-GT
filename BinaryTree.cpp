@@ -8,7 +8,7 @@ using namespace std;
 //stack
 #pragma region Stack_pointer
 
-typedef node item;
+typedef int item;
 struct Node // khai bao node du lieu
 {
     item Data;  // du lieu
@@ -137,27 +137,27 @@ node *InsertNode(node *root, int data)
     }
     // tim tu tai qua phai nde naof = null thi insert
     // float s;
-    Stack S;
-    Newstack(S);
-    push(S, root);
-    while (!IsEmpty(S))
-    {
-        node *temp = pop(S);
-        if (temp->left != NULL)
-            push(S, temp->left);
-        else
-        {
-            temp->left = CreateNode(data);
-            return root;
-        }
-        if (temp->right != NULL)
-            push(S, temp->right);
-        else
-        {
-            temp->right = CreateNode(data);
-            return root;
-        }
-    }
+    // Stack S;
+    // Newstack(S);
+    // push(S, root);
+    // while (!IsEmpty(S))
+    // {
+    //     node *temp = pop(S);
+    //     if (temp->left != NULL)
+    //         push(S, temp->left);
+    //     else
+    //     {
+    //         temp->left = CreateNode(data);
+    //         return root;
+    //     }
+    //     if (temp->right != NULL)
+    //         push(S, temp->right);
+    //     else
+    //     {
+    //         temp->right = CreateNode(data);
+    //         return root;
+    //     }
+    // }
 }
 // ham duyet preOder
 void PreOder(node *root)
