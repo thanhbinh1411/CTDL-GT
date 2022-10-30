@@ -1,14 +1,9 @@
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-//#include <bits/stdc++.h>
-
 using namespace std;
 
-//stack
-#pragma region Stack_pointer
-
+#pragma region Stack
 typedef int item;
+ 
 struct Node // khai bao node du lieu
 {
     item Data;  // du lieu
@@ -90,122 +85,80 @@ void Insert_K(Stack &S, item x, int k)
         }
     }
 }
-
 #pragma endregion
 
-//binary tree
-// dinh nghia kieu du lieu cho cay
-struct node
+#pragma region Tree
+struct tNode
 {
     int data;
-    node *left;
-    node *right;
-}; // dinh nghia node thanh node
+    tNode *Left, *Right;
+};
 
-// ham giai phong du lieu
-void Free(node *root)
+tNode *root;
+
+// create new node
+tNode *newNode(int data)
 {
-    if (root == NULL)
-        return;
-    Free(root->left);
-    Free(root->right);
-    Free(root);
+    tNode *node = new tNode;
+    node->data = data;
+    node->Left = NULL;
+    node->Right = NULL;
+    return node;
 }
 
-// ham tao 1 node moi
-node *CreateNode(int data)
-{
-    node *newnode = new node();
-    if (!newnode)
-    {
-        cout << "memory error" << endl;
-        return NULL;
-    }
-    newnode->data = data;
-    newnode->left = NULL;
-    newnode->right = NULL;
-    return newnode;
-}
-// ham chen 1 node moi vao cay
-node *InsertNode(node *root, int data)
-{
-    // neu cay rong thi tao mot root moi
-    if (root == NULL)
-    {
-        root = CreateNode(data);
-        return root;
-    }
-    // tim tu tai qua phai nde naof = null thi insert
-    // float s;
-    // Stack S;
-    // Newstack(S);
-    // push(S, root);
-    // while (!IsEmpty(S))
-    // {
-    //     node *temp = pop(S);
-    //     if (temp->left != NULL)
-    //         push(S, temp->left);
-    //     else
-    //     {
-    //         temp->left = CreateNode(data);
-    //         return root;
-    //     }
-    //     if (temp->right != NULL)
-    //         push(S, temp->right);
-    //     else
-    //     {
-    //         temp->right = CreateNode(data);
-    //         return root;
-    //     }
-    // }
-}
-// ham duyet preOder
-void PreOder(node *root)
+void PreOder(tNode *root)
 {
     if (root != NULL)
     {
-        cout << root->data < " ";
-        PreOder(root->left);
-        PreOder(root->right);
-    }
-}
-void InOrder(node *root)
-{
-    if (root != NULL)
-    {
-        InOrder(root->left);
         cout << root->data << " ";
-        InOrder(root->right);
+        PreOder(root->Left);
+        PreOder(root->Right);
     }
 }
-void PostOder(node *root)
+void InOrder(tNode *root)
 {
     if (root != NULL)
     {
-        PostOder(root->left);
-        PostOder(root->right);
+        InOrder(root->Left);
+        cout << root->data << " ";
+        InOrder(root->Right);
+    }
+}
+void PostOder(tNode *root)
+{
+    if (root != NULL)
+    {
+        PostOder(root->Left);
+        PostOder(root->Right);
         cout << root->data << " ";
     }
 }
+#pragma endregion
 int main()
 {
-    node* root = CreateNode(10);
-    root->left = CreateNode(11);
-    root->left->left = CreateNode(7);
-    root->right = CreateNode(9);
-    root->right->left = CreateNode(15);
-    root->right->right = CreateNode(8);
- 
-    cout << "Inorder traversal before insertion: ";
+    root = newNode(1);
+    tNode *node2 = newNode(2);
+    tNode *node3 = newNode(3);
+    tNode *node4 = newNode(4);
+    tNode *node5 = newNode(5);
+    tNode *node6 = newNode(6);
+    tNode *node7 = newNode(7);
+    // assign childnodes
+    root->Left = node2;
+    root->Right = node3;
+    node2->Left = node4;
+    node2->Right = node5;
+    node5->Left = node6;
+    node5->Right = node7;
+
+    cout << "\nBinary tree with PreOrder:";
+    PreOder(root);
+
+    cout << "\nBinary tree with InOrder:";
     InOrder(root);
-    cout << endl;
- 
-    int key = 12;
-    root = InsertNode(root, key);
- 
-    cout << "Inorder traversal after insertion: ";
-    InOrder(root);
-    cout << endl;
- 
+
+    cout << "\nBinary tree with PostOrder:";
+    PostOder(root);
+
     return 0;
 }
