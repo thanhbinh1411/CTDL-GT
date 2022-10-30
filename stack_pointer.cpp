@@ -4,11 +4,7 @@
 
 using namespace std;
 
-typedef struct item
-{
-    /* data */
-    int data;
-};
+typedef int item;
  
 struct Node // khai bao node du lieu
 {
