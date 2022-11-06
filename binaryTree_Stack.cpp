@@ -6,12 +6,14 @@
 using namespace std;
 
 #define MAX_SIZE 100
-int i = 500;
+
+#pragma region Stack
 // Khai bao cau truc Node
 typedef struct Node
 {
     char data;
     struct Node *P_L, *P_R;
+    int lTag, rTag;
 } Node;
 
 // Khai bao cau truc Stack
@@ -72,7 +74,9 @@ Node *peek(Stack *stack)
         return NULL;
     return stack->array[stack->top];
 }
+#pragma endregion
 
+#pragma region Binarytree Unthreaded
 void postOrderIterative(Node *root)
 {
     string s1;
@@ -146,27 +150,48 @@ void inOrderIterative(Node *root)
         return;
 
     Stack *stack = createStack(MAX_SIZE);
-    push(stack, root);
-    while (!isEmpty(stack))
+    Node *temp = root;
+    while (temp != NULL || !(isEmpty(stack)))
     {
-        Node *temp = peek(stack);
-        if( temp -> P_R != NULL)
+        while (temp)
         {
-            push(stack, temp ->P_R);
+            push(stack, temp);
+            temp = temp->P_L;
         }
-        if(temp -> P_L != NULL) 
-        {
-            push(stack, temp -> P_L);
-        }
-        else
-        {
-            cout<<temp -> data <<" ";
-            pop(stack);
-        }
+        temp = pop(stack);
+        // s1 = s1 + temp->data + " ";
+        cout << temp->data << " ";
+        temp = temp->P_R;
     }
-    //cout << s1 << endl;
+    // cout << s1 << endl;
 }
 
+void in(Node *root)
+{
+    string s1;
+    if (root == NULL)
+        return;
+    Stack *stack = createStack(MAX_SIZE);
+    Node *temp = root;
+    // cout << temp->data << " ";
+    while (temp != NULL || !(isEmpty(stack)))
+    {
+        while (temp != NULL)
+        {
+            // cout << temp->data << " ";
+            push(stack, temp);
+            temp = temp->P_L;
+        }
+        temp = pop(stack);
+        s1 = s1 + temp->data + " ";
+        // cout << temp->data << " ";
+        temp = temp->P_R;
+    }
+    cout << s1 << endl;
+}
+#pragma endregion
+
+#pragma region DeQuy
 void PreOder(Node *p)
 {
     if (p != NULL)
@@ -194,6 +219,120 @@ void PostOder(Node *p)
         cout << p->data << " ";
     }
 }
+#pragma endregion
+
+#pragma region Threaded
+void SetTag(Node *root)
+{
+    if (root != NULL)
+    {
+        SetTag(root->P_L);
+        if (root->P_L == NULL)
+            root->lTag = 0;
+        else
+            root->lTag = 1;
+        if (root->P_R == NULL)
+            root->rTag = 0;
+        else
+            root->rTag = 1;
+        SetTag(root->P_R);
+    }
+}
+Node *InPre(Node *root)
+{
+    Node *temp;
+    if (root->lTag == 0)
+    {
+        return root->P_L;
+    }
+    else
+    {
+        temp = root->P_L;
+        while (temp->rTag == 1)
+        {
+            temp = temp->P_R;
+        }
+        temp->P_R = root;
+        return temp;
+    }
+}
+Node *InSuc(Node *root)
+{
+    Node *temp;
+    if (root->rTag == 0)
+    {
+        return root->P_R;
+    }
+    else
+    {
+        temp = root->P_R;
+        while (temp->lTag == 1)
+        {
+            temp = temp->P_L;
+        }
+        temp->P_L = root;
+        return temp;
+    }
+}
+Node *LeftMost(Node *root)
+{
+    if (root == NULL)
+        return NULL;
+    while (root->P_L != NULL)
+    {
+        root = root->P_L;
+    }
+    return root;
+}
+Node *RightMost(Node *root)
+{
+    if (root == NULL)
+        return NULL;
+    while (root->P_R != NULL)
+    {
+        root = root->P_R;
+    }
+    return root;
+}
+void Pre(Node *root)
+{
+}
+void In(Node *root)
+{
+    Node *temp = root;
+    //Node *cur;
+    SetTag(root);
+    SetTag(temp);
+    while (temp != NULL)
+    {
+        InPre(temp);
+        InSuc(temp);
+        while(temp -> P_L != NULL && temp -> lTag == 1)
+        {
+            temp = temp -> P_L;
+            InPre(temp);
+        }
+        cout<<temp -> data<<" ";
+        while(temp -> P_R != NULL && temp -> rTag == 0)
+        {
+            temp = temp -> P_R;
+            cout<<temp -> data<<" ";
+        }
+        temp = temp -> P_R;
+    }
+    Node *head = NULL;
+    head->P_L = root;
+    head->P_R = head;
+    Node *a, *b;
+    a = LeftMost(root);
+    b = RightMost(root);
+    a -> P_L = head;
+    b -> P_R = head;
+}
+void Post(Node *root)
+{
+}
+#pragma endregion
 
 int main()
 {
@@ -221,6 +360,7 @@ int main()
 
     InOrder(root);
     cout << endl;
-    //inOrderIterative(root);
+    In(root);
+    cout << endl;
     return 0;
 }
