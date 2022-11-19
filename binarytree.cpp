@@ -220,16 +220,79 @@ struct THREADTREE
             P = nextNodeInoder(P);
         }
     }
-    void preorder()
+    NODE *nextNodePreoder(NODE *P)
     {
-        NODE*P = root->LLINK;
-        while(P != root)
+        NODE *Q = P;
+        while (Q->LTAG == 0)
         {
-            cout << P->INFO << ",";
-            P = nextNodeInoder(P);
+            return Q->LLINK;
+        }
+        if (Q->LTAG == 1 && Q->RTAG == 1)
+        {
+            return Q;
+        }
+        while (Q->RTAG == 1 && Q != root)
+        {
+            Q = Q->RLINK;
+        }
+        Q = Q->RLINK;
+        if (Q->LTAG == 0 || Q->RTAG == 1)
+        {
+            return Q;
         }
     }
-     NODE *nextNodePostoder(NODE *P)
+    void preorder()
+    {
+        NODE *P = root->LLINK;
+        //cout << P->INFO << ",";
+        while (P != root)
+        {
+            while(P -> LTAG ==0) 
+            {
+                cout << P->INFO << ",";
+                P = P-> LLINK;
+            }
+            if(P -> LTAG == 1 && P -> RTAG == 1) cout << P->INFO << ",";
+            while(P -> RTAG == 1 && P != root)
+            {
+                P = P->RLINK;
+                if(P != root)
+                cout << P->INFO << ",";
+                if(P -> LTAG == 0 && P != root) cout << (P->LLINK)->INFO << ",";
+            }
+            if(P == root) break;
+            P = P -> RLINK;
+            
+     
+        }
+    }
+    //  void preorder()
+    //     {
+    //         NODE *curr = root;
+    //         while (curr != nullptr)
+    //         {
+    //             if (curr != root)
+    //             {
+    //                 cout << curr->INFO << ",";
+    //             }
+    //             if (curr->LTAG == 0)
+    //                 curr = curr->LLINK;
+    //             else if (curr->RTAG == 0)
+    //                 curr = curr->RLINK;
+    //             else
+    //             {
+    //                 while (curr->RLINK != nullptr && curr->RTAG == 1)
+    //                 {
+    //                     curr = curr->RLINK;
+    //                 }
+    //                 if (curr->RLINK == nullptr)
+    //                     break;
+    //                 else
+    //                     curr = curr->RLINK;
+    //             }
+    //         }
+    //     }
+    NODE *nextNodePostoder(NODE *P)
     {
         NODE *Q = P->RLINK;
         if (P->RTAG == 1)
@@ -242,11 +305,11 @@ struct THREADTREE
     }
     void postorder()
     {
-        NODE*P = leftNode();
+        NODE *P = leftNode();
         while (P != root)
         {
             cout << P->INFO << ",";
-            P = nextNodeInoder(P);
+            P = nextNodePostoder(P);
         }
     }
 };
@@ -349,42 +412,62 @@ THREADTREE *build_thread_tree_inoder()
 
     tree->root = (NODE *)malloc(sizeof(tree));
 
-    nodeA->RTAG = 0;    nodeA->RLINK = nodeC;
-    nodeA->LTAG = 0;    nodeA->LLINK = nodeB;
+    nodeA->RTAG = 0;
+    nodeA->RLINK = nodeC;
+    nodeA->LTAG = 0;
+    nodeA->LLINK = nodeB;
 
-    nodeB->LTAG = 0;    nodeB->LLINK = nodeD;
-    nodeB->RTAG = 0;    nodeB->RLINK = nodeE;
+    nodeB->LTAG = 0;
+    nodeB->LLINK = nodeD;
+    nodeB->RTAG = 0;
+    nodeB->RLINK = nodeE;
 
-    nodeC->RTAG = 0;    nodeC->RLINK = nodeH;
-    nodeC->LTAG = 1;    nodeC->LLINK = nodeA;
+    nodeC->RTAG = 0;
+    nodeC->RLINK = nodeH;
+    nodeC->LTAG = 1;
+    nodeC->LLINK = nodeA;
 
-    nodeD->LTAG = 1;    nodeD->LLINK = tree->root;
-    nodeD->RTAG = 1;    nodeD->RLINK = nodeB;
+    nodeD->LTAG = 1;
+    nodeD->LLINK = tree->root;
+    nodeD->RTAG = 1;
+    nodeD->RLINK = nodeB;
 
-    nodeE->RTAG = 0;    nodeE->RLINK = nodeG;
-    nodeE->LTAG = 0;    nodeE->LLINK = nodeF;
+    nodeE->RTAG = 0;
+    nodeE->RLINK = nodeG;
+    nodeE->LTAG = 0;
+    nodeE->LLINK = nodeF;
 
-    nodeG->RTAG = 1;    nodeG->RLINK = nodeA;
-    nodeG->LTAG = 1;    nodeG->LLINK = nodeE;
+    nodeG->RTAG = 1;
+    nodeG->RLINK = nodeA;
+    nodeG->LTAG = 1;
+    nodeG->LLINK = nodeE;
 
-    nodeF->RTAG = 1;    nodeF->RLINK = nodeE;
-    nodeF->LTAG = 1;    nodeF->LLINK = nodeB;
+    nodeF->RTAG = 1;
+    nodeF->RLINK = nodeE;
+    nodeF->LTAG = 1;
+    nodeF->LLINK = nodeB;
 
-    nodeH->RTAG = 1;    nodeH->RLINK = tree -> root;
-    nodeH->LTAG = 0;    nodeH->LLINK = nodeJ;
+    nodeH->RTAG = 1;
+    nodeH->RLINK = tree->root;
+    nodeH->LTAG = 0;
+    nodeH->LLINK = nodeJ;
 
-    nodeJ->RTAG = 1;    nodeJ->RLINK = nodeH;
-    nodeJ->LTAG = 1;    nodeJ->LLINK = nodeC;
+    nodeJ->RTAG = 1;
+    nodeJ->RLINK = nodeH;
+    nodeJ->LTAG = 1;
+    nodeJ->LLINK = nodeC;
 
-    tree->root->LTAG = 0;    tree->root->LLINK = nodeA;
-    tree->root->RTAG = 1;    tree->root->RLINK = tree->root;
+    tree->root->LTAG = 0;
+    tree->root->LLINK = nodeA;
+    tree->root->RTAG = 1;
+    tree->root->RLINK = tree->root;
 
     return tree;
 }
 
 THREADTREE *build_thread_tree_preoder()
 {
-    // inorder D B A E G C H F J
+    // inorder A B D E F G C H J
     THREADTREE *tree;
     tree = (THREADTREE *)malloc(sizeof(THREADTREE));
     tree->init();
@@ -411,35 +494,55 @@ THREADTREE *build_thread_tree_preoder()
 
     tree->root = (NODE *)malloc(sizeof(tree));
 
-    nodeA->RTAG = 1;    nodeA->RLINK = nodeB;
-    nodeA->LTAG = 1;    nodeA->LLINK = tree->root;
+    nodeA->RTAG = 0;
+    nodeA->RLINK = nodeC;
+    nodeA->LTAG = 0;
+    nodeA->LLINK = nodeB;
 
-    nodeB->LTAG = 0;    nodeB->LLINK = nodeD;
-    nodeB->RTAG = 0;    nodeB->RLINK = nodeE;
+    nodeB->LTAG = 0;
+    nodeB->LLINK = nodeD;
+    nodeB->RTAG = 0;
+    nodeB->RLINK = nodeE;
 
-    nodeC->RTAG = 0;    nodeC->RLINK = nodeH;
-    nodeC->LTAG = 1;    nodeC->LLINK = nodeG;
+    nodeC->RTAG = 0;
+    nodeC->RLINK = nodeH;
+    nodeC->LTAG = 1;
+    nodeC->LLINK = nodeG;
 
-    nodeD->LTAG = 1;    nodeD->LLINK = nodeB;
-    nodeD->RTAG = 1;    nodeD->RLINK = nodeE;
+    nodeD->LTAG = 1;
+    nodeD->LLINK = nodeB;
+    nodeD->RTAG = 1;
+    nodeD->RLINK = nodeE;
 
-    nodeE->RTAG = 0;    nodeE->RLINK = nodeG;
-    nodeE->LTAG = 0;    nodeE->LLINK = nodeF;
+    nodeE->RTAG = 0;
+    nodeE->RLINK = nodeG;
+    nodeE->LTAG = 0;
+    nodeE->LLINK = nodeF;
 
-    nodeG->RTAG = 1;    nodeG->RLINK = nodeC;
-    nodeG->LTAG = 1;    nodeG->LLINK = nodeF;
+    nodeG->RTAG = 1;
+    nodeG->RLINK = nodeC;
+    nodeG->LTAG = 1;
+    nodeG->LLINK = nodeF;
 
-    nodeF->RTAG = 1;    nodeF->RLINK = nodeG;
-    nodeF->LTAG = 1;    nodeF->LLINK = nodeE;
+    nodeF->RTAG = 1;
+    nodeF->RLINK = nodeG;
+    nodeF->LTAG = 1;
+    nodeF->LLINK = nodeE;
 
-    nodeH->RTAG = 1;    nodeH->RLINK = nodeJ;
-    nodeH->LTAG = 0;    nodeH->LLINK = nodeJ;
+    nodeH->RTAG = 1;
+    nodeH->RLINK = nodeJ;
+    nodeH->LTAG = 0;
+    nodeH->LLINK = nodeJ;
 
-    nodeJ->RTAG = 1;    nodeJ->LLINK = nodeH;
-    nodeJ->LTAG = 1;    nodeJ->RLINK = tree -> root;
+    nodeJ->RTAG = 1;
+    nodeJ->LLINK = nodeH;
+    nodeJ->LTAG = 1;
+    nodeJ->RLINK = tree->root;
 
-    tree->root->LTAG = 0;    tree->root->LLINK = nodeA;
-    tree->root->RTAG = 1;    tree->root->RLINK = tree->root;
+    tree->root->LTAG = 0;
+    tree->root->LLINK = nodeA;
+    tree->root->RTAG = 1;
+    tree->root->RLINK = tree->root;
 
     return tree;
 }
@@ -473,35 +576,55 @@ THREADTREE *build_thread_tree_postoder()
 
     tree->root = (NODE *)malloc(sizeof(tree));
 
-    nodeA->RTAG = 1;    nodeA->RLINK = tree->root;
-    nodeA->LTAG = 0;    nodeA->LLINK = nodeB;
+    nodeA->RTAG = 1;
+    nodeA->RLINK = tree->root;
+    nodeA->LTAG = 0;
+    nodeA->LLINK = nodeB;
 
-    nodeB->LTAG = 0;    nodeB->LLINK = nodeD;
-    nodeB->RTAG = 0;    nodeB->RLINK = nodeE;
+    nodeB->LTAG = 0;
+    nodeB->LLINK = nodeD;
+    nodeB->RTAG = 0;
+    nodeB->RLINK = nodeE;
 
-    nodeC->RTAG = 0;    nodeC->RLINK = nodeH;
-    nodeC->LTAG = 1;    nodeC->LLINK = nodeH;
+    nodeC->RTAG = 0;
+    nodeC->RLINK = nodeH;
+    nodeC->LTAG = 1;
+    nodeC->LLINK = nodeH;
 
-    nodeD->LTAG = 1;    nodeD->LLINK = tree->root;
-    nodeD->RTAG = 1;    nodeD->RLINK = nodeF;
+    nodeD->LTAG = 1;
+    nodeD->LLINK = tree->root;
+    nodeD->RTAG = 1;
+    nodeD->RLINK = nodeF;
 
-    nodeE->RTAG = 0;    nodeE->RLINK = nodeG;
-    nodeE->LTAG = 0;    nodeE->LLINK = nodeF;
+    nodeE->RTAG = 0;
+    nodeE->RLINK = nodeG;
+    nodeE->LTAG = 0;
+    nodeE->LLINK = nodeF;
 
-    nodeG->RTAG = 1;    nodeG->RLINK = nodeE;
-    nodeG->LTAG = 1;    nodeG->LLINK = nodeF;
+    nodeG->RTAG = 1;
+    nodeG->RLINK = nodeE;
+    nodeG->LTAG = 1;
+    nodeG->LLINK = nodeF;
 
-    nodeF->RTAG = 1;    nodeF->RLINK = nodeG;
-    nodeF->LTAG = 1;    nodeF->LLINK = nodeD;
+    nodeF->RTAG = 1;
+    nodeF->RLINK = nodeG;
+    nodeF->LTAG = 1;
+    nodeF->LLINK = nodeD;
 
-    nodeH->RTAG = 1;    nodeH->RLINK = nodeC;
-    nodeH->LTAG = 0;    nodeH->LLINK = nodeJ;
+    nodeH->RTAG = 1;
+    nodeH->RLINK = nodeC;
+    nodeH->LTAG = 0;
+    nodeH->LLINK = nodeJ;
 
-    nodeJ->RTAG = 1;    nodeJ->RLINK = nodeH;
-    nodeJ->LTAG = 1;    nodeJ->LLINK = nodeB;
+    nodeJ->RTAG = 1;
+    nodeJ->RLINK = nodeH;
+    nodeJ->LTAG = 1;
+    nodeJ->LLINK = nodeB;
 
-    tree->root->LTAG = 0;    tree->root->LLINK = nodeA;
-    tree->root->RTAG = 1;    tree->root->RLINK = tree->root;
+    tree->root->LTAG = 0;
+    tree->root->LLINK = nodeA;
+    tree->root->RTAG = 1;
+    tree->root->RLINK = tree->root;
 
     return tree;
 }
@@ -528,6 +651,6 @@ int main()
 
     THREADTREE *tree4 = build_thread_tree_postoder();
     cout << endl;
-   // tree4->postorder();
+    // tree4->postorder();
     return 0;
 }
