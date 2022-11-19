@@ -1,11 +1,3 @@
-/******************************************************************************
-
-                              Online C++ Compiler.
-               Code, Compile, Run and Debug C++ program online.
-Write your code in this editor and press "Run" button to compile and execute it.
-
-*******************************************************************************/
-
 #include <iostream>
 #include <stdlib.h>
 
@@ -228,14 +220,25 @@ struct THREADTREE
             P = nextNodeInoder(P);
         }
     }
-    void preorder(NODE* temp)
+    void preorder()
     {
-        NODE*P = temp;
+        NODE*P = root->LLINK;
         while(P != root)
         {
             cout << P->INFO << ",";
             P = nextNodeInoder(P);
         }
+    }
+     NODE *nextNodePostoder(NODE *P)
+    {
+        NODE *Q = P->RLINK;
+        if (P->RTAG == 1)
+            return Q;
+        while (Q->LTAG == 0)
+        {
+            Q = Q->LLINK;
+        }
+        return Q;
     }
     void postorder()
     {
@@ -408,8 +411,8 @@ THREADTREE *build_thread_tree_preoder()
 
     tree->root = (NODE *)malloc(sizeof(tree));
 
-    nodeA->RTAG = 0;    nodeA->RLINK = nodeC;
-    nodeA->LTAG = 0;    nodeA->LLINK = nodeB;
+    nodeA->RTAG = 1;    nodeA->RLINK = nodeB;
+    nodeA->LTAG = 1;    nodeA->LLINK = tree->root;
 
     nodeB->LTAG = 0;    nodeB->LLINK = nodeD;
     nodeB->RTAG = 0;    nodeB->RLINK = nodeE;
@@ -429,11 +432,11 @@ THREADTREE *build_thread_tree_preoder()
     nodeF->RTAG = 1;    nodeF->RLINK = nodeG;
     nodeF->LTAG = 1;    nodeF->LLINK = nodeE;
 
-    nodeH->RTAG = 1;    nodeH->RLINK = nodeC;
+    nodeH->RTAG = 1;    nodeH->RLINK = nodeJ;
     nodeH->LTAG = 0;    nodeH->LLINK = nodeJ;
 
-    nodeJ->RTAG = 1;    nodeJ->RLINK = nodeH;
-    nodeJ->LTAG = 1;    nodeJ->LLINK = tree -> root;
+    nodeJ->RTAG = 1;    nodeJ->LLINK = nodeH;
+    nodeJ->LTAG = 1;    nodeJ->RLINK = tree -> root;
 
     tree->root->LTAG = 0;    tree->root->LLINK = nodeA;
     tree->root->RTAG = 1;    tree->root->RLINK = tree->root;
@@ -470,7 +473,7 @@ THREADTREE *build_thread_tree_postoder()
 
     tree->root = (NODE *)malloc(sizeof(tree));
 
-    nodeA->RTAG = 0;    nodeA->RLINK = nodeC;
+    nodeA->RTAG = 1;    nodeA->RLINK = tree->root;
     nodeA->LTAG = 0;    nodeA->LLINK = nodeB;
 
     nodeB->LTAG = 0;    nodeB->LLINK = nodeD;
@@ -513,16 +516,18 @@ int main()
     cout << endl;
     tree1->postorder();
 
+    cout << endl;
+    cout << endl;
     THREADTREE *tree2 = build_thread_tree_inoder();
     cout << endl;
     tree2->inoder();
 
     THREADTREE *tree3 = build_thread_tree_preoder();
     cout << endl;
-    //tree3->preorder()
+    tree3->preorder();
 
     THREADTREE *tree4 = build_thread_tree_postoder();
     cout << endl;
-    tree4->postorder();
+   // tree4->postorder();
     return 0;
 }
