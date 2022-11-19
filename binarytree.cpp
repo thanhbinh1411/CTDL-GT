@@ -260,7 +260,7 @@ struct THREADTREE
                 cout << P->INFO << ",";
                 if(P -> LTAG == 0 && P != root) cout << (P->LLINK)->INFO << ",";
             }
-            if(P == root) break;
+            if(P == root) return;
             P = P -> RLINK;
             
      
